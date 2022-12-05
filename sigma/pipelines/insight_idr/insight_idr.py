@@ -36,109 +36,109 @@ def insight_idr_pipeline():
         name="Generic Log Sources to Rapid7 InsightIDR Transformation",
         priority=10,
         items=[
-            # Process Creation field mapping
-            ProcessingItem(
-                identifier="insight_idr_process_creation_fieldmapping",
-                transformation=FieldMappingTransformation({
-                    "ProcessId": "process.pid",
-                    "Image": "process.exe_path",
-                    "FileVersion": "process.exe_file.version",
-                    "Description": "process.exe_file.description",
-                    "Product": "process.exe_file.product_name",
-                    "Company": "process.exe_file.author",
-                    "OriginalFileName": "process.name",
-                    "CommandLine": "process.cmd_line",
-                    "User": "process.username",
-                    "ParentProcessId": "parent_process.pid",
-                    "ParentImage": "parent_process.exe_path",
-                    "ParentCommandLine": "parent_process.cmd_line",
-                    "ParentUser": "parent_process.username",
-                    "md5": "process.exe_file.hashes.md5",
-                    "sha1": "process.exe_file.hashes.sha1",
-                    "sha256": "process.exe_file.hashes.sha256"
-                }),
-                rule_conditions=[
-                    logsource_windows_process_creation(),
-                ]
-            ),
-            # Handle unsupported Process Start fields
-            ProcessingItem(
-                identifier="insight_idr_fail_process_start_fields",
-                transformation=DetectionItemFailureTransformation("The InsightIDR backend does not support the CurrentDirectory, IntegrityLevel, or imphash fields for process start rules."),
-                rule_conditions=[
-                    logsource_windows_process_creation()
-                ],
-                field_name_conditions=[
-                    IncludeFieldCondition(
-                        fields=[
-                            "CurrentDirectory",
-                            "IntegrityLevel",
-                            "imphash",
-                            "Imphash",
-                            "LogonId"
-                        ]
-                    )
-                ]
-            ),
-            # Change logsource properties
-            ProcessingItem(
-                identifier="insight_idr_process_start_logsource",
-                transformation=ChangeLogsourceTransformation(
-                    category="process_start_event",
-                    product="windows"
-                ),
-                rule_conditions=[
-                    logsource_windows_process_creation(),
-                ]
-            ),
+            # # Process Creation field mapping
+            # ProcessingItem(
+            #     identifier="insight_idr_process_creation_fieldmapping",
+            #     transformation=FieldMappingTransformation({
+            #         "ProcessId": "process.pid",
+            #         "Image": "process.exe_path",
+            #         "FileVersion": "process.exe_file.version",
+            #         "Description": "process.exe_file.description",
+            #         "Product": "process.exe_file.product_name",
+            #         "Company": "process.exe_file.author",
+            #         "OriginalFileName": "process.name",
+            #         "CommandLine": "process.cmd_line",
+            #         "User": "process.username",
+            #         "ParentProcessId": "parent_process.pid",
+            #         "ParentImage": "parent_process.exe_path",
+            #         "ParentCommandLine": "parent_process.cmd_line",
+            #         "ParentUser": "parent_process.username",
+            #         "md5": "process.exe_file.hashes.md5",
+            #         "sha1": "process.exe_file.hashes.sha1",
+            #         "sha256": "process.exe_file.hashes.sha256"
+            #     }),
+            #     rule_conditions=[
+            #         logsource_windows_process_creation(),
+            #     ]
+            # ),
+            # # Handle unsupported Process Start fields
+            # ProcessingItem(
+            #     identifier="insight_idr_fail_process_start_fields",
+            #     transformation=DetectionItemFailureTransformation("The InsightIDR backend does not support the CurrentDirectory, IntegrityLevel, or imphash fields for process start rules."),
+            #     rule_conditions=[
+            #         logsource_windows_process_creation()
+            #     ],
+            #     field_name_conditions=[
+            #         IncludeFieldCondition(
+            #             fields=[
+            #                 "CurrentDirectory",
+            #                 "IntegrityLevel",
+            #                 "imphash",
+            #                 "Imphash",
+            #                 "LogonId"
+            #             ]
+            #         )
+            #     ]
+            # ),
+            # # Change logsource properties
+            # ProcessingItem(
+            #     identifier="insight_idr_process_start_logsource",
+            #     transformation=ChangeLogsourceTransformation(
+            #         category="process_start_event",
+            #         product="windows"
+            #     ),
+            #     rule_conditions=[
+            #         logsource_windows_process_creation(),
+            #     ]
+            # ),
 
-            # DNS Request field mapping
-            ProcessingItem(
-                identifier="insight_idr_dns_query_fieldmapping",
-                rule_condition_linking=any,
-                transformation=FieldMappingTransformation({
-                    "QueryName": "query",
-                    "Computer": "asset",
-                    "record_type": "query_type"
-                }),
-                rule_conditions=[
-                    logsource_windows_dns_query(),
-                    logsource_generic_dns_query()
-                ]
-            ),
-            # Handle unsupported DNS query fields
-            ProcessingItem(
-                identifier="insight_idr_fail_dns_fields",
-                rule_condition_linking=any,
-                transformation=DetectionItemFailureTransformation("The InsightIDR backend does not support the ProcessID, QueryStatus, QueryResults, Image, or answer fields for DNS events."),
-                rule_conditions=[
-                    logsource_windows_dns_query(),
-                    logsource_generic_dns_query()
-                ],
-                field_name_conditions=[
-                    IncludeFieldCondition(
-                        fields=[
-                            "ProcessId",
-                            "QueryStatus",
-                            "QueryResults",
-                            "Image",
-                            "answer"
-                        ]
-                    )
-                ]
-            ),
-            # Change log source properties
-            ProcessingItem(
-                identifier="insight_idr_dns_query_logsource",
-                rule_condition_linking=any,
-                transformation=ChangeLogsourceTransformation(
-                    category="dns"
-                ),
-                rule_conditions=[
-                    logsource_windows_dns_query(),
-                    logsource_generic_dns_query()
-                ]
-            ),
+            # # DNS Request field mapping
+            # ProcessingItem(
+            #     identifier="insight_idr_dns_query_fieldmapping",
+            #     rule_condition_linking=any,
+            #     transformation=FieldMappingTransformation({
+            #         "QueryName": "query",
+            #         "Computer": "asset",
+            #         "record_type": "query_type"
+            #     }),
+            #     rule_conditions=[
+            #         logsource_windows_dns_query(),
+            #         logsource_generic_dns_query()
+            #     ]
+            # ),
+            # # Handle unsupported DNS query fields
+            # ProcessingItem(
+            #     identifier="insight_idr_fail_dns_fields",
+            #     rule_condition_linking=any,
+            #     transformation=DetectionItemFailureTransformation("The InsightIDR backend does not support the ProcessID, QueryStatus, QueryResults, Image, or answer fields for DNS events."),
+            #     rule_conditions=[
+            #         logsource_windows_dns_query(),
+            #         logsource_generic_dns_query()
+            #     ],
+            #     field_name_conditions=[
+            #         IncludeFieldCondition(
+            #             fields=[
+            #                 "ProcessId",
+            #                 "QueryStatus",
+            #                 "QueryResults",
+            #                 "Image",
+            #                 "answer"
+            #             ]
+            #         )
+            #     ]
+            # ),
+            # # Change log source properties
+            # ProcessingItem(
+            #     identifier="insight_idr_dns_query_logsource",
+            #     rule_condition_linking=any,
+            #     transformation=ChangeLogsourceTransformation(
+            #         category="dns"
+            #     ),
+            #     rule_conditions=[
+            #         logsource_windows_dns_query(),
+            #         logsource_generic_dns_query()
+            #     ]
+            # ),
 
             # Web Proxy field mapping
             ProcessingItem(
@@ -213,9 +213,7 @@ def insight_idr_pipeline():
                 transformation=RuleFailureTransformation("Rule type not yet supported by the InsightIDR Sigma backend!"),
                 rule_condition_negation=True,
                 rule_conditions=[
-                    RuleProcessingItemAppliedCondition("insight_idr_web_proxy_logsource"),
-                    RuleProcessingItemAppliedCondition("insight_idr_process_start_logsource"),
-                    RuleProcessingItemAppliedCondition("insight_idr_dns_query_logsource")
+                    RuleProcessingItemAppliedCondition("insight_idr_web_proxy_logsource")
                 ],
             ),
 
